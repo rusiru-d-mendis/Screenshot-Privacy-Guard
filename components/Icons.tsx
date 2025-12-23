@@ -61,6 +61,12 @@ export const UndoIcon: React.FC<IconProps> = ({ className = "w-6 h-6" }) => (
 
 export const RedoIcon: React.FC<IconProps> = ({ className = "w-6 h-6" }) => (
     <svg xmlns="http://www.w3.org/2000/svg" className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M21 10H11a8 8 0 00-8 8v2m12-12l-4 4m4-4l-4-4" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M21 10H11a8 8 0 00-8 8v2M21 10l-4-4m4 4l-4 4" />
+    </svg>
+);
+
+export const PointerIcon: React.FC<IconProps> = ({ className = "w-6 h-6" }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zm0 0l2.51 2.225A2.25 2.25 0 0016.192 16.6l-2.51-2.225m0 0l2.51 2.225M13.684 16.6l-5.227-7.917c-.569-1.034.23-2.31.99-2.31h8.138c.76 0 1.558 1.276.99 2.31l-5.227 7.917z" />
     </svg>
 );

@@ -2,13 +2,14 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { detectSensitiveAreas } from './services/geminiService';
 import type { Point, DrawingRegion, RectangleRegion } from './types';
-import { UploadIcon, SparklesIcon, TrashIcon, DownloadIcon, CrossIcon, RectangleIcon, CircleIcon, PencilIcon, UndoIcon, RedoIcon } from './components/Icons';
+import { UploadIcon, SparklesIcon, TrashIcon, DownloadIcon, CrossIcon, RectangleIcon, CircleIcon, PencilIcon, UndoIcon, RedoIcon, PointerIcon } from './components/Icons';
 
-type DrawingTool = 'rectangle' | 'ellipse' | 'freehand';
+type DrawingTool = 'rectangle' | 'ellipse' | 'freehand' | 'pointer';
 
 const App: React.FC = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [processedImageUrl, setProcessedImageUrl] = useState<string | null>(null);
   const [isDetecting, setIsDetecting] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -19,7 +20,7 @@ const App: React.FC = () => {
   const [effectType, setEffectType] = useState<'blur' | 'pixelate'>('blur');
   const [pixelationLevel, setPixelationLevel] = useState<number>(20);
   const [blurAmount, setBlurAmount] = useState<number>(20);
-  const [drawingTool, setDrawingTool] = useState<DrawingTool>('rectangle');
+  const [drawingTool, setDrawingTool] = useState<DrawingTool>('pointer');
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imageContainerRef = useRef<HTMLDivElement>(null);
@@ -101,14 +102,24 @@ const App: React.FC = () => {
       ctx.filter = 'none';
     });
 
+    setProcessedImageUrl(canvas.toDataURL());
   }, [regions, effectType, pixelationLevel, blurAmount]);
   
   useEffect(() => {
     const image = imageRef.current;
-    image.onload = () => { redrawCanvas(); };
-  }, [redrawCanvas]);
+    const handleLoad = () => {
+        redrawCanvas();
+    };
+    image.addEventListener('load', handleLoad);
 
-  useEffect(() => { redrawCanvas(); }, [regions, redrawCanvas]);
+    if (imageUrl) {
+        redrawCanvas();
+    }
+
+    return () => {
+        image.removeEventListener('load', handleLoad);
+    };
+  }, [redrawCanvas, imageUrl]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -122,6 +133,11 @@ const App: React.FC = () => {
       setError(null);
     } else {
       setError("Please select a valid image file.");
+      setImageFile(null);
+      setImageUrl(null);
+      setProcessedImageUrl(null);
+      setHistory([[]]);
+      setHistoryIndex(0);
     }
   };
 
@@ -169,7 +185,7 @@ const App: React.FC = () => {
   };
 
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!imageUrl) return;
+    if (!imageUrl || drawingTool === 'pointer') return;
     e.preventDefault();
     const pos = getMousePos(e);
     if (pos) {
@@ -203,7 +219,7 @@ const App: React.FC = () => {
         updateRegions(prev => [...prev, { type: 'path', points: currentPath }]);
       }
     } else if (currentRect && currentRect.width > 5 && currentRect.height > 5) {
-      updateRegions(prev => [...prev, { ...currentRect, type: drawingTool }]);
+      updateRegions(prev => [...prev, { ...currentRect, type: drawingTool === 'pointer' ? 'rectangle' : drawingTool }]);
     }
     setIsDrawing(false);
     setDrawStartPoint(null);
@@ -253,10 +269,10 @@ const App: React.FC = () => {
             <div className="bg-gray-700/50 p-3 rounded-lg space-y-4">
               {/* Drawing Tool & Effect Style */}
               <div>
-                  <h3 className="text-lg font-semibold mb-2 text-gray-300">Drawing Tool</h3>
+                  <h3 className="text-lg font-semibold mb-2 text-gray-300">Tool</h3>
                   <div className="flex bg-gray-900 rounded-lg p-1 space-x-1">
-                      {[{ tool: 'rectangle', icon: <RectangleIcon /> }, { tool: 'ellipse', icon: <CircleIcon /> }, { tool: 'freehand', icon: <PencilIcon /> }].map(({ tool, icon }) => (
-                          <button key={tool} onClick={() => setDrawingTool(tool as DrawingTool)} className={`w-1/3 rounded-md py-2 text-sm font-medium transition-colors flex justify-center items-center ${drawingTool === tool ? 'bg-blue-600 text-white' : 'text-gray-300 hover:bg-gray-700'}`}>{icon}</button>
+                      {[{ tool: 'pointer', icon: <PointerIcon /> }, { tool: 'rectangle', icon: <RectangleIcon /> }, { tool: 'ellipse', icon: <CircleIcon /> }, { tool: 'freehand', icon: <PencilIcon /> }].map(({ tool, icon }) => (
+                          <button key={tool} onClick={() => setDrawingTool(tool as DrawingTool)} className={`w-1/4 rounded-md py-2 text-sm font-medium transition-colors flex justify-center items-center ${drawingTool === tool ? 'bg-blue-600 text-white' : 'text-gray-300 hover:bg-gray-700'}`}>{icon}</button>
                       ))}
                   </div>
               </div>
@@ -291,23 +307,23 @@ const App: React.FC = () => {
             <h3 className="font-semibold text-lg text-gray-200 mb-2">How to use:</h3>
             <ol className="list-decimal list-inside space-y-2">
                 <li>Upload an image.</li>
-                <li>Select a tool, effect, and intensity.</li>
+                <li>Select a drawing tool, effect, and intensity.</li>
                 <li>Click "Auto-detect" or manually draw on the image.</li>
-                <li>Use Undo/Redo or click 'x' on a region to make changes.</li>
+                <li>Switch to the Pointer tool (hand icon) to click/tap regions to delete.</li>
                 <li>Download your protected image.</li>
             </ol>
           </div>
         </aside>
 
         <section className="lg:col-span-2 bg-gray-800/50 rounded-lg p-4 flex items-center justify-center border border-gray-700 min-h-[400px] lg:min-h-0">
-          <div ref={imageContainerRef} className="w-full h-full relative flex items-center justify-center overflow-hidden cursor-crosshair" onMouseDown={handleMouseDown} onMouseMove={handleMouseMove} onMouseUp={handleMouseUp} onMouseLeave={handleMouseUp}>
+          <div ref={imageContainerRef} className={`w-full h-full relative flex items-center justify-center overflow-hidden ${drawingTool === 'pointer' ? 'cursor-default' : 'cursor-crosshair'}`} onMouseDown={handleMouseDown} onMouseMove={handleMouseMove} onMouseUp={handleMouseUp} onMouseLeave={handleMouseUp}>
             {!imageUrl ? (
               <div className="text-center text-gray-500"><UploadIcon className="w-16 h-16 mx-auto mb-4" /><p className="text-xl">Your image will appear here</p></div>
             ) : (
               <>
                 <canvas ref={canvasRef} className="max-w-full max-h-full object-contain" style={{ display: 'none' }} />
                 <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center pointer-events-none">
-                    <img alt="Processed screenshot" src={canvasRef.current?.toDataURL()} className="max-w-full max-h-full object-contain" />
+                    <img alt="Processed screenshot" src={processedImageUrl ?? ''} className="max-w-full max-h-full object-contain" />
                 </div>
                 {isDetecting && (
                   <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center">
@@ -329,10 +345,18 @@ const App: React.FC = () => {
                       return region;
                   };
                   const box = getBoundingBox();
+                  const isPointerMode = drawingTool === 'pointer';
+                  const regionClasses = isPointerMode 
+                    ? "border-2 border-solid border-red-500 cursor-pointer" 
+                    : "border-2 border-dashed border-cyan-400/50 pointer-events-none";
+
                   return (
-                   <div key={index} className="absolute group" style={{ left: `${(box.x / imageRef.current.naturalWidth) * 100}%`, top: `${(box.y / imageRef.current.naturalHeight) * 100}%`, width: `${(box.width / imageRef.current.naturalWidth) * 100}%`, height: `${(box.height / imageRef.current.naturalHeight) * 100}%` }}>
-                     <button onClick={(e) => { e.stopPropagation(); removeRegion(index); }} className="absolute -top-2 -right-2 bg-red-600 rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity z-10 cursor-pointer" aria-label="Remove region"><CrossIcon /></button>
-                   </div>
+                   <div 
+                     key={index} 
+                     className={`absolute transition-colors ${regionClasses}`}
+                     style={{ left: `${(box.x / imageRef.current.naturalWidth) * 100}%`, top: `${(box.y / imageRef.current.naturalHeight) * 100}%`, width: `${(box.width / imageRef.current.naturalWidth) * 100}%`, height: `${(box.height / imageRef.current.naturalHeight) * 100}%` }}
+                     onClick={isPointerMode ? (e) => { e.stopPropagation(); removeRegion(index); } : undefined}
+                   />
                   )
                 })}
               </>
