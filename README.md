@@ -1,7 +1,7 @@
 
 # Screenshot Privacy Guard
 
-![Screenshot of the App](https://i.imgur.com/8aVz32x.png)
+![Screenshot of the App](https://github.com/rusiru-d-mendis/Screenshot-Privacy-Guard/blob/main/Screenshot%202026-01-03%20202454.png))
 
 An intelligent Progressive Web App (PWA) built with React and the Gemini API to automatically detect and anonymize sensitive information in screenshots. Protect your privacy with powerful AI-driven detection and intuitive manual editing tools.
 
