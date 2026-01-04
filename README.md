@@ -48,7 +48,7 @@ To run this project on your local machine, you need to have Node.js installed.
     ```
 
 3.  **Set Up Environment Variables**
-    Create a file named `.env` in the root of the project directory and add your Google Gemini API key. The name **must** start with `VITE_`.
+    Create a file named `.env` in the root of the project directory and add your Google Gemini API key. The name **must** start with `VITE_` for Vite to recognize it.
     ```
     VITE_API_KEY=YOUR_GEMINI_API_KEY_HERE
     ```

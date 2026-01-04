@@ -13,8 +13,8 @@ export default defineConfig({
         name: 'GhostSnap',
         short_name: 'GhostSnap',
         description: 'An intelligent tool to automatically detect and blur sensitive information in screenshots. Upload an image, let the AI find PII, and manually adjust blurs before downloading the secure image.',
-        theme_color: '#111827',
-        background_color: '#111827',
+        theme_color: '#ffffff',
+        background_color: '#f8fafc',
         display: 'standalone',
         start_url: '.',
         icons: [
