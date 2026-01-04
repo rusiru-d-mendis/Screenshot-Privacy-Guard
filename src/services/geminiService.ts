@@ -2,7 +2,7 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import type { RectangleRegion } from '../types';
 
-// FIX: Initialize GoogleGenAI with API_KEY from process.env as per guidelines.
+// FIX: Initialize GoogleGenAI with API_KEY from process.env as per guidelines, resolving the TypeScript error.
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 const fileToGenerativePart = async (file: File) => {
@@ -60,7 +60,6 @@ export const detectSensitiveAreas = async (imageFile: File): Promise<Omit<Rectan
 
     const detectedRegions = JSON.parse(jsonString);
     
-    // Basic validation
     if (!Array.isArray(detectedRegions)) {
         throw new Error("Invalid response format from API: not an array.");
     }
