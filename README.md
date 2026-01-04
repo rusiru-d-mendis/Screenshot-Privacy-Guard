@@ -48,9 +48,9 @@ To run this project on your local machine, you need to have Node.js installed.
     ```
 
 3.  **Set Up Environment Variables**
-    Create a file named `.env` in the root of the project directory and add your Google Gemini API key:
+    Create a file named `.env` in the root of the project directory and add your Google Gemini API key. The name **must** start with `VITE_`.
     ```
-    API_KEY=YOUR_GEMINI_API_KEY_HERE
+    VITE_API_KEY=YOUR_GEMINI_API_KEY_HERE
     ```
 
 4.  **Run the Development Server**
@@ -76,7 +76,7 @@ This static web app is perfect for services like Netlify.
     -   **Build command**: `npm run build`
     -   **Publish directory**: `dist`
     -   Go to **Site configuration > Environment variables** and add your API key:
-        -   **Key**: `API_KEY`
+        -   **Key**: `VITE_API_KEY`
         -   **Value**: `YOUR_GEMINI_API_KEY_HERE`
 
 4.  **Deploy**: Click "Deploy site". Netlify will build and host your PWA.

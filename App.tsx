@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect, useCallback, useLayoutEffect } from 'react';
 import { detectSensitiveAreas } from './services/geminiService';
 import type { Point, DrawingRegion, RectangleRegion } from './types';
-import { UploadIcon, SparklesIcon, TrashIcon, DownloadIcon, CrossIcon, RectangleIcon, CircleIcon, PencilIcon, UndoIcon, RedoIcon, PointerIcon } from './components/Icons';
+import { UploadIcon, SparklesIcon, TrashIcon, DownloadIcon, RectangleIcon, CircleIcon, PencilIcon, UndoIcon, RedoIcon, PointerIcon } from './components/Icons';
 
 type DrawingTool = 'rectangle' | 'ellipse' | 'freehand' | 'pointer';
 

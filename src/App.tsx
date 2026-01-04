@@ -140,7 +140,7 @@ const App: React.FC = () => {
     });
 
     setProcessedImageUrl(canvas.toDataURL());
-  }, [regions, effectType, pixelationLevel, blurAmount]);
+  }, [regions, effectType, pixelationLevel, blurAmount, imageUrl]);
   
   useEffect(() => {
     if (imageUrl) {
@@ -150,24 +150,19 @@ const App: React.FC = () => {
 
   useEffect(() => {
     const image = imageRef.current;
-
     const applyEffects = () => {
-      if (image.naturalWidth > 0 && image.naturalHeight > 0) {
+      if (image.src && image.complete && image.naturalWidth > 0) {
         redrawCanvas();
       }
     };
-
+    image.addEventListener('load', applyEffects);
     if (image.complete) {
       applyEffects();
     }
-
-    image.addEventListener('load', applyEffects);
-
     return () => {
       image.removeEventListener('load', applyEffects);
     };
   }, [redrawCanvas]);
-
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

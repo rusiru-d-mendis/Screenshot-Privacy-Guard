@@ -1,10 +1,10 @@
-
 import { GoogleGenAI, Type } from "@google/genai";
 import type { RectangleRegion } from '../types';
 
 const API_KEY = process.env.API_KEY;
 if (!API_KEY) {
-  throw new Error("API_KEY is not defined. Please set it in your environment variables for deployment (e.g., in Netlify) or in a local .env file.");
+  // FIX: Updated error message to be more generic and not instruct user on how to set the key.
+  throw new Error("API_KEY environment variable not set.");
 }
 const ai = new GoogleGenAI({ apiKey: API_KEY });
 
