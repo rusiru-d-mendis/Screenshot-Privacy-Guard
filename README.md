@@ -1,7 +1,7 @@
 
 # GhostSnap
 
-![Screenshot of the App](Screenshot%202026-01-03%20203501.png)
+![Screenshot of the App](screen.png)
 
 An intelligent Progressive Web App (PWA) built with React, Vite, and the Gemini API to automatically detect and anonymize sensitive information in screenshots. Protect your privacy with powerful AI-driven detection and intuitive manual editing tools.
 
