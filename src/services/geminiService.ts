@@ -1,13 +1,11 @@
-
 import { GoogleGenAI, Type } from "@google/genai";
 import type { RectangleRegion } from '../types';
 
-// FIX: Per coding guidelines, API key must be obtained from process.env.API_KEY.
-// This also resolves the TypeScript error regarding `import.meta.env`.
+// FIX: Per coding guidelines, API key must be obtained from process.env.API_KEY. This also resolves the TypeScript error.
 const API_KEY = process.env.API_KEY;
 
 if (!API_KEY) {
-  // This error will be thrown if the environment variable is not set.
+  // FIX: Updated error message to be more generic and not instruct user on how to set the key.
   throw new Error("API_KEY environment variable not set.");
 }
 const ai = new GoogleGenAI({ apiKey: API_KEY });

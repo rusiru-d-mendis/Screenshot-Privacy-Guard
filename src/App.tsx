@@ -359,13 +359,13 @@ const App: React.FC = () => {
                 <svg viewBox={`0 0 ${imageRef.current.naturalWidth || 1} ${imageRef.current.naturalHeight || 1}`} className="absolute top-0 left-0 w-full h-full" style={{ overflow: 'visible' }}>
                   {isDrawing && currentRect && (
                       drawingTool === 'rectangle' ? (
-                          <rect x={currentRect.x} y={currentRect.y} width={currentRect.width} height={currentRect.height} fill="rgba(34, 211, 238, 0.2)" stroke="rgba(34, 211, 238, 1)" strokeWidth="2" strokeDasharray="4" style={{ vectorEffect: 'non-scaling-stroke' as const }} />
+                          <rect x={currentRect.x} y={currentRect.y} width={currentRect.width} height={currentRect.height} fill="rgba(34, 211, 238, 0.2)" stroke="rgba(34, 211, 238, 1)" strokeWidth="2" strokeDasharray="4" vectorEffect="non-scaling-stroke" />
                       ) : (
-                          <ellipse cx={currentRect.x + currentRect.width / 2} cy={currentRect.y + currentRect.height / 2} rx={currentRect.width / 2} ry={currentRect.height / 2} fill="rgba(34, 211, 238, 0.2)" stroke="rgba(34, 211, 238, 1)" strokeWidth="2" strokeDasharray="4" style={{ vectorEffect: 'non-scaling-stroke' as const }} />
+                          <ellipse cx={currentRect.x + currentRect.width / 2} cy={currentRect.y + currentRect.height / 2} rx={currentRect.width / 2} ry={currentRect.height / 2} fill="rgba(34, 211, 238, 0.2)" stroke="rgba(34, 211, 238, 1)" strokeWidth="2" strokeDasharray="4" vectorEffect="non-scaling-stroke" />
                       )
                   )}
                   {isDrawing && currentPath.length > 1 && (
-                      <path d={currentPath.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x},${p.y}`).join(' ')} fill="none" stroke="rgba(34, 211, 238, 0.8)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ vectorEffect: 'non-scaling-stroke' as const }} />
+                      <path d={currentPath.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x},${p.y}`).join(' ')} fill="none" stroke="rgba(34, 211, 238, 0.8)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
                   )}
                   {!isDrawing && regions.map((region, index) => {
                       const isPointerMode = drawingTool === 'pointer';
@@ -375,7 +375,7 @@ const App: React.FC = () => {
                           strokeWidth: 2,
                           strokeDasharray: isPointerMode ? 'none' : '4 4',
                           className: `transition-colors ${isPointerMode ? 'cursor-pointer' : 'pointer-events-none'}`,
-                          style: { vectorEffect: 'non-scaling-stroke' as const },
+                          vectorEffect: 'non-scaling-stroke' as const,
                           onClick: isPointerMode ? (e: React.MouseEvent) => { e.stopPropagation(); removeRegion(index); } : undefined,
                       };
                       if (region.type === 'rectangle') return <rect key={index} x={region.x} y={region.y} width={region.width} height={region.height} {...commonProps} />;
