@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect, useCallback, useLayoutEffect } from 'react';
 import { detectSensitiveAreas } from './services/geminiService';
 import type { Point, DrawingRegion, RectangleRegion } from './types';
@@ -369,19 +368,19 @@ const App: React.FC = () => {
                   <svg viewBox={`0 0 ${imageRef.current.naturalWidth || 1} ${imageRef.current.naturalHeight || 1}`} className="absolute top-0 left-0 w-full h-full" style={{ overflow: 'visible' }}>
                     {isDrawing && currentRect && (
                         drawingTool === 'rectangle' ? (
-                            <rect x={currentRect.x} y={currentRect.y} width={currentRect.width} height={currentRect.height} fill="rgba(34, 211, 238, 0.2)" stroke="rgba(34, 211, 238, 1)" strokeWidth="3" strokeDasharray="6" style={{ vectorEffect: 'non-scaling-stroke' as const }} />
+                            <rect x={currentRect.x} y={currentRect.y} width={currentRect.width} height={currentRect.height} fill="rgba(34, 211, 218, 0.2)" stroke="rgba(34, 211, 218, 1)" strokeWidth="3" strokeDasharray="6" style={{ vectorEffect: 'non-scaling-stroke' as const }} />
                         ) : (
-                            <ellipse cx={currentRect.x + currentRect.width / 2} cy={currentRect.y + currentRect.height / 2} rx={currentRect.width / 2} ry={currentRect.height / 2} fill="rgba(34, 211, 238, 0.2)" stroke="rgba(34, 211, 238, 1)" strokeWidth="3" strokeDasharray="6" style={{ vectorEffect: 'non-scaling-stroke' as const }} />
+                            <ellipse cx={currentRect.x + currentRect.width / 2} cy={currentRect.y + currentRect.height / 2} rx={currentRect.width / 2} ry={currentRect.height / 2} fill="rgba(34, 211, 218, 0.2)" stroke="rgba(34, 211, 218, 1)" strokeWidth="3" strokeDasharray="6" style={{ vectorEffect: 'non-scaling-stroke' as const }} />
                         )
                     )}
                     {isDrawing && currentPath.length > 1 && (
-                        <path d={currentPath.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x},${p.y}`).join(' ')} fill="none" stroke="rgba(34, 211, 238, 0.8)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" style={{ vectorEffect: 'non-scaling-stroke' as const }} />
+                        <path d={currentPath.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x},${p.y}`).join(' ')} fill="none" stroke="rgba(34, 211, 218, 0.8)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" style={{ vectorEffect: 'non-scaling-stroke' as const }} />
                     )}
                     {!isDrawing && regions.map((region, index) => {
                         const isPointerMode = drawingTool === 'pointer';
                         const commonProps = {
                             fill: isPointerMode ? "rgba(239, 68, 68, 0.2)" : "none",
-                            stroke: isPointerMode ? 'rgba(239, 68, 68, 1)' : 'rgba(34, 211, 238, 0.5)',
+                            stroke: isPointerMode ? 'rgba(239, 68, 68, 1)' : 'rgba(34, 211, 218, 0.5)',
                             strokeWidth: 2,
                             strokeDasharray: isPointerMode ? 'none' : '4 4',
                             className: `transition-all duration-150 ${isPointerMode ? 'cursor-pointer hover:fill-red-500/40 hover:stroke-red-600' : 'pointer-events-none'}`,
